@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>訪問看護 月額料金概算ツール | FOOTAGE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* FOOTAGE Brand Colors */
+  --navy: #192864;
+  --navy-light: #2E3A61;
+  --navy-mid: #4A6FA5;
+  --navy-muted: #7B8FB2;
+  --orange: #F29A49;
+  --orange-light: #F4B97A;
+  --orange-bg: rgba(242, 154, 73, .08);
+  --gold: #FFC633;
+  --white: #FFFFFF;
+  --error: #E04545;
+  --success: #2E7D32;
+
+  /* Grayscale */
+  --g50: #F8F9FA;
+  --g100: #F1F3F5;
+  --g200: #E9ECEF;
+  --g300: #DEE2E6;
+  --g400: #CED4DA;
+  --g500: #868E96;
+  --g700: #495057;
+  --g900: #212529;
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --shadow: 0 1px 3px rgba(25,40,100,.08), 0 1px 2px rgba(25,40,100,.04);
+  --shadow-lg: 0 8px 24px rgba(25,40,100,.12);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Hiragino Kaku Gothic ProN', sans-serif;
+  background: var(--g50);
+  color: var(--g900);
+  line-height: 1.7;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== Header ===== */
+.header {
+  background: var(--navy);
+  color: var(--white);
+  padding: 20px 16px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 12px rgba(25,40,100,.3);
+}
+.header-inner {
+  max-width: 640px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.header-logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--gold), var(--orange));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--white);
+}
+.header-text h1 {
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: .3px;
+  line-height: 1.3;
+}
+.header-text p {
+  font-size: 11px;
+  color: var(--navy-muted);
+  margin-top: 1px;
+  font-weight: 400;
+}
+
+/* ===== Container ===== */
+.container {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+/* ===== Card ===== */
+.card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  padding: 20px;
+  margin-bottom: 14px;
+  border: 1px solid var(--g200);
+}
+
+.card-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--g100);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.card-title .step {
+  width: 24px;
+  height: 24px;
+  background: var(--navy);
+  color: var(--white);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* ===== Insurance Toggle ===== */
+.insurance-toggle {
+  display: flex;
+  gap: 10px;
+}
+.insurance-toggle button {
+  flex: 1;
+  padding: 14px 12px;
+  border: 2px solid var(--g200);
+  border-radius: var(--radius-md);
+  background: var(--white);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .2s;
+  color: var(--g500);
+  font-family: inherit;
+}
+.insurance-toggle button.active {
+  border-color: var(--navy);
+  background: var(--navy);
+  color: var(--white);
+}
+.insurance-toggle button:hover:not(.active) {
+  border-color: var(--g300);
+  background: var(--g50);
+}
+/* ===== Form ===== */
+.form-group {
+  margin-bottom: 16px;
+}
+.form-group:last-child { margin-bottom: 0; }
+
+.form-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--g700);
+  margin-bottom: 6px;
+}
+.form-label .hint {
+  font-weight: 400;
+  color: var(--g500);
+  font-size: 11px;
+  margin-left: 4px;
+}
+
+select, input[type="number"] {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1.5px solid var(--g300);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  color: var(--g900);
+  background: var(--white);
+  font-family: inherit;
+  appearance: auto;
+  transition: border-color .2s, box-shadow .2s;
+}
+select:focus, input[type="number"]:focus {
+  outline: none;
+  border-color: var(--navy);
+  box-shadow: 0 0 0 3px rgba(25,40,100,.1);
+}
+
+/* ===== Checkbox ===== */
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1.5px solid var(--g200);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all .15s;
+  user-select: none;
+}
+.checkbox-item:hover {
+  border-color: var(--g300);
+  background: var(--g50);
+}
+.checkbox-item.checked {
+  border-color: var(--navy);
+  background: rgba(25,40,100,.04);
+}
+.checkbox-item input[type="checkbox"] { display: none; }
+.checkbox-item .check-box {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--g300);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all .15s;
+}
+.checkbox-item.checked .check-box {
+  background: var(--navy);
+  border-color: var(--navy);
+}
+.checkbox-item.checked .check-box::after {
+  content: '';
+  width: 6px;
+  height: 10px;
+  border: solid var(--white);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg) translate(-1px, -1px);
+}
+.checkbox-item .check-label {
+  font-size: 13px;
+  color: var(--g700);
+  flex: 1;
+  line-height: 1.4;
+}
+.checkbox-item .check-unit {
+  font-size: 11px;
+  color: var(--g500);
+  white-space: nowrap;
+  font-weight: 500;
+}
+.checkbox-item .check-type {
+  font-size: 10px;
+  color: var(--orange);
+  font-weight: 600;
+  background: var(--orange-bg);
+  padding: 1px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+/* ===== Number input ===== */
+.number-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.number-input-wrap input {
+  width: 80px;
+  text-align: center;
+}
+.number-input-wrap .unit {
+  font-size: 13px;
+  color: var(--g500);
+}
+
+/* ===== Result ===== */
+.result-card {
+  background: var(--navy);
+  color: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 24px 20px;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  overflow: hidden;
+}
+.result-card::before {
+  content: '';
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 120px;
+  height: 120px;
+  background: rgba(242,154,73,.15);
+  border-radius: 50%;
+}
+.result-card::after {
+  content: '';
+  position: absolute;
+  bottom: -20px;
+  left: -20px;
+  width: 80px;
+  height: 80px;
+  background: rgba(255,198,51,.1);
+  border-radius: 50%;
+}
+.result-content { position: relative; z-index: 1; }
+.result-card .result-label {
+  font-size: 12px;
+  color: var(--navy-muted);
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+.result-card .result-amount {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+}
+.result-card .result-amount .yen {
+  font-size: 16px;
+  font-weight: 600;
+}
+.result-card .result-amount .range-sep {
+  font-size: 18px;
+  font-weight: 500;
+  margin: 0 4px;
+  opacity: .7;
+}
+.result-card .result-badge {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 3px 10px;
+  background: rgba(255,255,255,.15);
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.breakdown {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255,255,255,.15);
+}
+.breakdown-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3px 0;
+  font-size: 13px;
+}
+.breakdown-row .label { color: var(--navy-muted); }
+.breakdown-row .value { font-weight: 600; }
+.breakdown-row.total {
+  border-top: 1px solid rgba(255,255,255,.2);
+  margin-top: 6px;
+  padding-top: 8px;
+  font-size: 14px;
+}
+
+/* ===== Monthly ===== */
+.monthly-card {
+  background: var(--white);
+  border: 2px solid var(--orange);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  margin-bottom: 14px;
+}
+.monthly-card .monthly-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.monthly-card .monthly-title .accent-bar {
+  width: 4px;
+  height: 18px;
+  background: var(--orange);
+  border-radius: 2px;
+}
+.monthly-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 0;
+  font-size: 13px;
+}
+.monthly-row .label { color: var(--g700); }
+.monthly-row .value { font-weight: 600; color: var(--g900); }
+.monthly-row.highlight {
+  background: var(--orange-bg);
+  border-left: 3px solid var(--orange);
+  margin: 10px -12px 0;
+  padding: 12px 12px 12px 14px;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+}
+.monthly-row.highlight .label {
+  font-weight: 600;
+  color: var(--navy);
+}
+.monthly-row.highlight .value {
+  color: var(--orange);
+  font-size: 20px;
+  font-weight: 800;
+}
+
+/* ===== Note ===== */
+.note {
+  background: rgba(255,198,51,.08);
+  border-left: 3px solid var(--gold);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  padding: 14px 16px;
+  font-size: 12px;
+  color: var(--g700);
+  line-height: 1.8;
+  margin-bottom: 14px;
+}
+.note strong {
+  display: block;
+  color: var(--navy);
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+/* ===== Layout ===== */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+/* ===== Footer ===== */
+.footer {
+  text-align: center;
+  padding: 24px 16px 40px;
+  color: var(--g400);
+  font-size: 11px;
+  line-height: 1.8;
+}
+.footer .logo-text {
+  font-weight: 700;
+  color: var(--navy-muted);
+  font-size: 12px;
+}
+
+/* ===== Visit Sections ===== */
+.visit-section {
+  padding: 14px;
+  background: var(--g50);
+  border-radius: var(--radius-md);
+  margin-bottom: 12px;
+  border: 1px solid var(--g200);
+}
+.visit-section:last-child { margin-bottom: 0; }
+.visit-section-header {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 10px;
+  padding-left: 2px;
+}
+.visit-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+}
+.visit-col { flex: 1; }
+.visit-col-narrow { width: 100px; flex-shrink: 0; }
+
+/* ===== Utilities ===== */
+.hidden { display: none !important; }
+
+/* ===== Responsive ===== */
+@media (max-width: 400px) {
+  .two-col { grid-template-columns: 1fr; }
+  .result-card .result-amount { font-size: 32px; }
+  .header-text h1 { font-size: 15px; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="header-logo">F</div>
+    <div class="header-text">
+      <h1>訪問看護 月額料金概算ツール</h1>
+      <p>令和6年度 介護報酬・診療報酬改定対応</p>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- Step 1: Insurance Type -->
+  <div class="card">
+    <div class="card-title"><span class="step">1</span>保険種別</div>
+    <div class="insurance-toggle">
+      <button id="btn-kaigo" class="active" onclick="setInsurance('kaigo')">介護保険</button>
+      <button id="btn-iryo" onclick="setInsurance('iryo')">医療保険</button>
+    </div>
+  </div>
+
+  <!-- Step 2: Burden Ratio -->
+  <div class="card">
+    <div class="card-title"><span class="step">2</span>自己負担割合</div>
+    <div class="form-group">
+      <select id="burden-ratio" onchange="calculate()">
+        <option value="1" selected>1割負担</option>
+        <option value="2">2割負担</option>
+        <option value="3">3割負担</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Step 3: Visit Content -->
+  <div class="card">
+    <div class="card-title"><span class="step">3</span>訪問内容</div>
+
+    <!-- 介護保険 -->
+    <div id="kaigo-settings">
+      <div class="visit-section">
+        <div class="visit-section-header">看護</div>
+        <div class="visit-row">
+          <div class="visit-col">
+            <label class="form-label">訪問時間</label>
+            <select id="kaigo-kango-time" onchange="calculate()">
+              <option value="0">なし</option>
+              <option value="20">20分未満</option>
+              <option value="30" selected>30分未満</option>
+              <option value="60">30分以上1時間未満</option>
+              <option value="90">1時間以上1時間30分未満</option>
+            </select>
+          </div>
+          <div class="visit-col-narrow">
+            <label class="form-label">回数/週</label>
+            <div class="number-input-wrap">
+              <input type="number" id="kaigo-kango-visits" value="2" min="0" max="7" onchange="calculate()" oninput="calculate()">
+              <span class="unit">回</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="visit-section">
+        <div class="visit-section-header">リハビリ</div>
+        <div class="visit-row">
+          <div class="visit-col">
+            <label class="form-label">1回の時間</label>
+            <select id="kaigo-rehab-time" onchange="calculate()">
+              <option value="0">なし</option>
+              <option value="1" selected>20分（1単位）</option>
+              <option value="2">40分（2単位）</option>
+              <option value="3">60分（3単位）</option>
+            </select>
+          </div>
+          <div class="visit-col-narrow">
+            <label class="form-label">回数/週</label>
+            <div class="number-input-wrap">
+              <input type="number" id="kaigo-rehab-visits" value="1" min="0" max="7" onchange="calculate()" oninput="calculate()">
+              <span class="unit">回</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 医療保険 -->
+    <div id="iryo-settings" class="hidden">
+      <div class="visit-section">
+        <div class="visit-section-header">看護</div>
+        <div class="visit-row">
+          <div class="visit-col">
+            <label class="form-label">1回の訪問時間</label>
+            <select id="iryo-kango-time" onchange="calculate()">
+              <option value="0">なし</option>
+              <option value="60" selected>30分以上90分未満</option>
+            </select>
+          </div>
+          <div class="visit-col-narrow">
+            <label class="form-label">回数/週</label>
+            <div class="number-input-wrap">
+              <input type="number" id="iryo-kango-visits" value="2" min="0" max="7" onchange="calculate()" oninput="calculate()">
+              <span class="unit">回</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="visit-section">
+        <div class="visit-section-header">リハビリ</div>
+        <div class="visit-row">
+          <div class="visit-col">
+            <label class="form-label">1回の訪問時間</label>
+            <select id="iryo-rehab-time" onchange="calculate()">
+              <option value="0">なし</option>
+              <option value="60" selected>30分以上90分未満</option>
+            </select>
+          </div>
+          <div class="visit-col-narrow">
+            <label class="form-label">回数/週</label>
+            <div class="number-input-wrap">
+              <input type="number" id="iryo-rehab-visits" value="1" min="0" max="7" onchange="calculate()" oninput="calculate()">
+              <span class="unit">回</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 4: Additions (Kaigo) -->
+  <div id="kaigo-additions" class="card">
+    <div class="card-title"><span class="step">4</span>加算項目（介護保険）</div>
+    <div class="checkbox-group">
+      <label class="checkbox-item" onclick="toggleCheck(this)">
+        <input type="checkbox" data-kaigo-add="emergency">
+        <div class="check-box"></div>
+        <span class="check-label">緊急時訪問看護加算</span>
+        <span class="check-type">月1回</span>
+        <span class="check-unit">574単位</span>
+      </label>
+      <label class="checkbox-item" onclick="toggleCheck(this)">
+        <input type="checkbox" data-kaigo-add="special-management1">
+        <div class="check-box"></div>
+        <span class="check-label">特別管理加算(I)<br><small style="color:var(--g500)">在宅悪性腫瘍等患者・人工呼吸器使用等</small></span>
+        <span class="check-type">月1回</span>
+        <span class="check-unit">500単位</span>
+      </label>
+      <label class="checkbox-item" onclick="toggleCheck(this)">
+        <input type="checkbox" data-kaigo-add="special-management2">
+        <div class="check-box"></div>
+        <span class="check-label">特別管理加算(II)<br><small style="color:var(--g500)">褥瘡・留置カテーテル管理等</small></span>
+        <span class="check-type">月1回</span>
+        <span class="check-unit">250単位</span>
+      </label>
+    </div>
+  </div>
+
+  <!-- Step 4: Additions (Iryo) -->
+  <div id="iryo-additions" class="card hidden">
+    <div class="card-title"><span class="step">4</span>加算項目（医療保険）</div>
+    <div class="checkbox-group">
+      <label class="checkbox-item" onclick="toggleCheck(this)">
+        <input type="checkbox" data-iryo-add="emergency">
+        <div class="check-box"></div>
+        <span class="check-label">24時間対応体制加算</span>
+        <span class="check-type">月1回</span>
+        <span class="check-unit">6,400円</span>
+      </label>
+      <label class="checkbox-item" onclick="toggleCheck(this)">
+        <input type="checkbox" data-iryo-add="special-management1">
+        <div class="check-box"></div>
+        <span class="check-label">特別管理加算(I)<br><small style="color:var(--g500)">在宅悪性腫瘍等患者・人工呼吸器使用等</small></span>
+        <span class="check-type">月1回</span>
+        <span class="check-unit">5,000円</span>
+      </label>
+      <label class="checkbox-item" onclick="toggleCheck(this)">
+        <input type="checkbox" data-iryo-add="special-management2">
+        <div class="check-box"></div>
+        <span class="check-label">特別管理加算(II)<br><small style="color:var(--g500)">褥瘡・留置カテーテル管理等</small></span>
+        <span class="check-type">月1回</span>
+        <span class="check-unit">2,500円</span>
+      </label>
+    </div>
+  </div>
+
+  <!-- Result -->
+  <div class="result-card" id="result-card">
+    <div class="result-content">
+      <div class="result-label">月額自己負担額（概算）</div>
+      <div class="result-amount" id="result-range"></div>
+      <span class="result-badge" id="result-insurance-label">介護保険適用</span>
+      <div class="breakdown" id="breakdown"></div>
+    </div>
+  </div>
+
+  <!-- Monthly -->
+  <div class="monthly-card">
+    <div class="monthly-title">
+      <span class="accent-bar"></span>
+      月額概算
+    </div>
+    <div id="monthly-breakdown"></div>
+  </div>
+
+  <!-- Note -->
+  <div class="note">
+    <strong>ご利用にあたって</strong>
+    ・本ツールの計算結果はあくまで概算です。実際の利用料金は各訪問看護ステーション・事業所にご確認ください。<br>
+    ・令和6年度（2024年6月施行）介護報酬・診療報酬改定の単価を基に計算しています。<br>
+    ・交通費・日用品費等の保険外自費負担分は含まれていません。<br>
+    ・高額療養費制度などの医療費や介護費の自己負担軽減制度は考慮していません。<br>
+    ・介護保険の金額は地域単価10.00円（その他地域）で計算しています。地域により異なります。
+  </div>
+
+  <div style="text-align:center; margin-bottom:20px;">
+    <a href="https://footage-nursing.jp/" target="_blank" rel="noopener" style="display:inline-block; width:100%; max-width:400px; padding:16px 24px; background:var(--orange); color:var(--white); font-size:16px; font-weight:700; text-decoration:none; border-radius:var(--radius-md); box-shadow:0 2px 8px rgba(242,154,73,.3); transition:background .2s;" onmouseover="this.style.background='#e08a3a'" onmouseout="this.style.background='var(--orange)'">フッテージへのお問合せ</a>
+  </div>
+
+  <div class="footer">
+    <span class="logo-text">FOOTAGE</span><br>
+    訪問看護 月額料金概算ツール v2.0<br>
+    令和6年度 介護報酬・診療報酬改定対応
+  </div>
+</div>
+
+<script>
+// =============================================
+// 料金データ（令和6年度改定）
+// =============================================
+
+// 介護保険：看護（看護師等）
+const KAIGO_KANGO = { '20': 314, '30': 471, '60': 823, '90': 1128 };
+// 介護保険：リハビリ（PT/OT/ST）1回20分あたり
+const KAIGO_REHAB_PER = 293;
+// 医療保険：訪問看護基本療養費（看護・リハビリ共通）
+const IRYO_BASE = 5550;
+
+// State
+let currentInsurance = 'kaigo';
+
+function setInsurance(type) {
+  currentInsurance = type;
+  document.getElementById('btn-kaigo').classList.toggle('active', type === 'kaigo');
+  document.getElementById('btn-iryo').classList.toggle('active', type === 'iryo');
+  document.getElementById('kaigo-settings').classList.toggle('hidden', type !== 'kaigo');
+  document.getElementById('iryo-settings').classList.toggle('hidden', type !== 'iryo');
+  document.getElementById('kaigo-additions').classList.toggle('hidden', type !== 'kaigo');
+  document.getElementById('iryo-additions').classList.toggle('hidden', type !== 'iryo');
+  calculate();
+}
+
+function toggleCheck(el) {
+  const cb = el.querySelector('input[type="checkbox"]');
+  const kaigoAdd = cb.getAttribute('data-kaigo-add');
+  const iryoAdd = cb.getAttribute('data-iryo-add');
+
+  // Mutual exclusion: special management I / II
+  const attr = kaigoAdd ? 'data-kaigo-add' : 'data-iryo-add';
+  const addVal = kaigoAdd || iryoAdd;
+  if ((addVal === 'special-management1' || addVal === 'special-management2') && !cb.checked) {
+    const other = addVal === 'special-management1' ? 'special-management2' : 'special-management1';
+    const otherCb = document.querySelector(`[${attr}="${other}"]`);
+    if (otherCb && otherCb.checked) { otherCb.checked = false; otherCb.closest('.checkbox-item').classList.remove('checked'); }
+  }
+
+  cb.checked = !cb.checked;
+  el.classList.toggle('checked', cb.checked);
+  calculate();
+}
+
+function isChecked(attr, value) {
+  const cb = document.querySelector(`[${attr}="${value}"]`);
+  return cb && cb.checked;
+}
+
+function fmt(n) {
+  return Math.round(n).toLocaleString('ja-JP');
+}
+
+function val(id) {
+  return parseInt(document.getElementById(id).value) || 0;
+}
+
+// 上限値: 実費x1.25を百の位で四捨五入
+function rangeMax(base) {
+  return Math.round((base * 1.25) / 100) * 100;
+}
+
+function calculate() {
+  const ratio = parseInt(document.getElementById('burden-ratio').value) / 10;
+  const WEEKS = 4; // 4週計算
+  let breakdownHTML = '';
+  let monthlyHTML = '';
+  let insuranceLabel = '';
+
+  if (currentInsurance === 'kaigo') {
+    insuranceLabel = '介護保険適用';
+    const areaRate = 10.00;
+
+    // 看護（週 x 4週）
+    const kangoTime = document.getElementById('kaigo-kango-time').value;
+    const kangoPerWeek = val('kaigo-kango-visits');
+    const kangoPerMonth = kangoPerWeek * WEEKS;
+    const kangoUnit = kangoTime === '0' ? 0 : KAIGO_KANGO[kangoTime];
+
+    // リハビリ（週 x 4週）
+    const rehabCount = val('kaigo-rehab-time');
+    const rehabPerWeek = val('kaigo-rehab-visits');
+    const rehabPerMonth = rehabPerWeek * WEEKS;
+    const rehabUnit = rehabCount === 0 ? 0 : KAIGO_REHAB_PER * rehabCount;
+
+    // 月間基本単位
+    const kangoMonthly = kangoUnit * kangoPerMonth;
+    const rehabMonthly = rehabUnit * rehabPerMonth;
+
+    // 月額加算
+    let addUnits = 0;
+    const addItems = [];
+    if (isChecked('data-kaigo-add', 'emergency')) {
+      addUnits += 574; addItems.push({ n: '緊急時訪問看護加算', u: 574 });
+    }
+    if (isChecked('data-kaigo-add', 'special-management1')) {
+      addUnits += 500; addItems.push({ n: '特別管理加算(I)', u: 500 });
+    }
+    if (isChecked('data-kaigo-add', 'special-management2')) {
+      addUnits += 250; addItems.push({ n: '特別管理加算(II)', u: 250 });
+    }
+
+    const totalUnits = kangoMonthly + rehabMonthly + addUnits;
+    const totalYen = totalUnits * areaRate;
+    const burden = totalYen * ratio;
+    const burdenMax = rangeMax(burden);
+
+    // Breakdown
+    breakdownHTML = '';
+    if (kangoUnit > 0 && kangoPerWeek > 0) {
+      breakdownHTML += `<div class="breakdown-row"><span class="label">看護 1回あたり</span><span class="value">${fmt(kangoUnit)}単位</span></div>`;
+    }
+    if (rehabUnit > 0 && rehabPerWeek > 0) {
+      breakdownHTML += `<div class="breakdown-row"><span class="label">リハビリ 1回(${rehabCount * 20}分)</span><span class="value">${fmt(rehabUnit)}単位</span></div>`;
+    }
+    breakdownHTML += `<div class="breakdown-row total"><span class="label">月間合計(4週)</span><span class="value">${fmt(totalUnits)}単位</span></div>`;
+
+    // Monthly
+    monthlyHTML = '';
+    if (kangoUnit > 0 && kangoPerWeek > 0) {
+      monthlyHTML += `<div class="monthly-row"><span class="label">看護(${fmt(kangoUnit)}単位 x 週${kangoPerWeek}回 x 4週)</span><span class="value">${fmt(kangoMonthly)}単位</span></div>`;
+    }
+    if (rehabUnit > 0 && rehabPerWeek > 0) {
+      monthlyHTML += `<div class="monthly-row"><span class="label">リハビリ(${fmt(rehabUnit)}単位 x 週${rehabPerWeek}回 x 4週)</span><span class="value">${fmt(rehabMonthly)}単位</span></div>`;
+    }
+    addItems.forEach(i => {
+      monthlyHTML += `<div class="monthly-row"><span class="label">${i.n}</span><span class="value">${fmt(i.u)}単位</span></div>`;
+    });
+    monthlyHTML += `<div class="monthly-row"><span class="label">月間合計(4週)</span><span class="value">${fmt(totalUnits)}単位</span></div>`;
+    monthlyHTML += `<div class="monthly-row"><span class="label">保険総額(10割)</span><span class="value">${fmt(totalYen)}円</span></div>`;
+    monthlyHTML += `<div class="monthly-row highlight"><span class="label">月額自己負担(${ratio * 10}割)</span><span class="value">${fmt(burden)}円〜${fmt(burdenMax)}円</span></div>`;
+
+    setRange(burden, burdenMax);
+
+  } else {
+    // === 医療保険 ===
+    insuranceLabel = '医療保険適用';
+
+    // 看護（週 x 4週）
+    const kangoTime = document.getElementById('iryo-kango-time').value;
+    const kangoPerWeek = val('iryo-kango-visits');
+    const kangoPerMonth = kangoPerWeek * WEEKS;
+    const kangoBase = kangoTime === '0' ? 0 : IRYO_BASE;
+
+    // リハビリ（週 x 4週）
+    const rehabTime = document.getElementById('iryo-rehab-time').value;
+    const rehabPerWeek = val('iryo-rehab-visits');
+    const rehabPerMonth = rehabPerWeek * WEEKS;
+    const rehabBase = rehabTime === '0' ? 0 : IRYO_BASE;
+
+    // 月間基本療養費
+    const kangoMonthly = kangoBase * kangoPerMonth;
+    const rehabMonthly = rehabBase * rehabPerMonth;
+
+    // 月額加算
+    let addFee = 0;
+    const addItems = [];
+    if (isChecked('data-iryo-add', 'emergency')) {
+      addFee += 6400; addItems.push({ n: '24時間対応体制加算', f: 6400 });
+    }
+    if (isChecked('data-iryo-add', 'special-management1')) {
+      addFee += 5000; addItems.push({ n: '特別管理加算(I)', f: 5000 });
+    }
+    if (isChecked('data-iryo-add', 'special-management2')) {
+      addFee += 2500; addItems.push({ n: '特別管理加算(II)', f: 2500 });
+    }
+
+    const totalFee = kangoMonthly + rehabMonthly + addFee;
+    const burden = totalFee * ratio;
+    const burdenMax = rangeMax(burden);
+
+    // Breakdown
+    breakdownHTML = '';
+    if (kangoBase > 0 && kangoPerWeek > 0) {
+      breakdownHTML += `<div class="breakdown-row"><span class="label">看護 基本療養費</span><span class="value">${fmt(kangoBase)}円/回</span></div>`;
+    }
+    if (rehabBase > 0 && rehabPerWeek > 0) {
+      breakdownHTML += `<div class="breakdown-row"><span class="label">リハビリ 基本療養費</span><span class="value">${fmt(rehabBase)}円/回</span></div>`;
+    }
+    breakdownHTML += `<div class="breakdown-row total"><span class="label">月額合計(10割)</span><span class="value">${fmt(totalFee)}円</span></div>`;
+
+    // Monthly
+    monthlyHTML = '';
+    if (kangoBase > 0 && kangoPerWeek > 0) {
+      monthlyHTML += `<div class="monthly-row"><span class="label">看護(${fmt(kangoBase)}円 x 週${kangoPerWeek}回 x 4週)</span><span class="value">${fmt(kangoMonthly)}円</span></div>`;
+    }
+    if (rehabBase > 0 && rehabPerWeek > 0) {
+      monthlyHTML += `<div class="monthly-row"><span class="label">リハビリ(${fmt(rehabBase)}円 x 週${rehabPerWeek}回 x 4週)</span><span class="value">${fmt(rehabMonthly)}円</span></div>`;
+    }
+    addItems.forEach(i => {
+      monthlyHTML += `<div class="monthly-row"><span class="label">${i.n}</span><span class="value">${fmt(i.f)}円</span></div>`;
+    });
+    monthlyHTML += `<div class="monthly-row"><span class="label">月額合計(10割)</span><span class="value">${fmt(totalFee)}円</span></div>`;
+    monthlyHTML += `<div class="monthly-row highlight"><span class="label">月額自己負担(${ratio * 10}割)</span><span class="value">${fmt(burden)}円〜${fmt(burdenMax)}円</span></div>`;
+
+    setRange(burden, burdenMax);
+  }
+
+  document.getElementById('result-insurance-label').textContent = insuranceLabel;
+  document.getElementById('breakdown').innerHTML = breakdownHTML;
+  document.getElementById('monthly-breakdown').innerHTML = monthlyHTML;
+}
+
+function setRange(low, high) {
+  document.getElementById('result-range').innerHTML =
+    `${fmt(Math.round(low))}<span class="yen">円</span><span class="range-sep">〜</span>${fmt(high)}<span class="yen">円</span>`;
+}
+
+// Init
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.checkbox-item input[type="checkbox"]').forEach(cb => {
+    if (cb.checked) cb.closest('.checkbox-item').classList.add('checked');
+  });
+  calculate();
+});
+</script>
+
+</body>
+</html>
