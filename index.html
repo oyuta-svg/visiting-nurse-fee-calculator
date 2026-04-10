@@ -5,46 +5,46 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>訪問看護 月額料金概算ツール | FOOTAGE</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet">
 <style>
 :root {
-  /* FOOTAGE Brand Colors */
-  --navy: #192864;
-  --navy-light: #2E3A61;
+  /* FOOTAGE Brand Colors — DESIGN.md準拠 */
+  --navy: #2e3a61;
+  --navy-light: #4A6FA5;
   --navy-mid: #4A6FA5;
   --navy-muted: #7B8FB2;
-  --orange: #F29A49;
+  --orange: #fe8e3f;
   --orange-light: #F4B97A;
-  --orange-bg: rgba(242, 154, 73, .08);
+  --orange-bg: rgba(254, 142, 63, .08);
   --gold: #FFC633;
   --white: #FFFFFF;
-  --error: #E04545;
-  --success: #2E7D32;
+  --error: #f16f64;
+  --success: #5cb85c;
 
-  /* Grayscale */
-  --g50: #F8F9FA;
-  --g100: #F1F3F5;
-  --g200: #E9ECEF;
+  /* Neutral — DESIGN.md準拠 */
+  --g50: #fbfaf7;
+  --g100: #f5f3ef;
+  --g200: #eeeeee;
   --g300: #DEE2E6;
   --g400: #CED4DA;
-  --g500: #868E96;
+  --g500: #999999;
   --g700: #495057;
-  --g900: #212529;
+  --g900: #000000;
 
   --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --shadow: 0 1px 3px rgba(25,40,100,.08), 0 1px 2px rgba(25,40,100,.04);
-  --shadow-lg: 0 8px 24px rgba(25,40,100,.12);
+  --radius-md: 5px;
+  --radius-lg: 8px;
+  --shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.12);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
-  font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Hiragino Kaku Gothic ProN', sans-serif;
+  font-family: "Hiragino Sans", "ヒラギノ角ゴシック", "Hiragino Kaku Gothic ProN", "ヒラギノ角ゴ ProN W3", "メイリオ", Meiryo, sans-serif;
   background: var(--g50);
   color: var(--g900);
-  line-height: 1.7;
+  line-height: 1.8;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
 }
@@ -57,7 +57,7 @@ body {
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: 0 2px 12px rgba(25,40,100,.3);
+  box-shadow: 0 2px 12px rgba(46,58,97,.3);
 }
 .header-inner {
   max-width: 640px;
@@ -81,9 +81,9 @@ body {
 }
 .header-text h1 {
   font-size: 17px;
-  font-weight: 700;
-  letter-spacing: .3px;
-  line-height: 1.3;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  line-height: 1.5;
 }
 .header-text p {
   font-size: 11px;
@@ -96,7 +96,7 @@ body {
 .container {
   max-width: 640px;
   margin: 0 auto;
-  padding: 16px;
+  padding: 20px 16px;
 }
 
 /* ===== Card ===== */
@@ -105,13 +105,13 @@ body {
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow);
   padding: 20px;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
   border: 1px solid var(--g200);
 }
 
 .card-title {
-  font-size: 14px;
-  font-weight: 700;
+  font-size: 16px;
+  font-weight: 600;
   color: var(--navy);
   margin-bottom: 16px;
   padding-bottom: 10px;
@@ -119,6 +119,8 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
+  letter-spacing: 0.1em;
+  line-height: 1.5;
 }
 .card-title .step {
   width: 24px;
@@ -151,10 +153,11 @@ body {
   transition: all .2s;
   color: var(--g500);
   font-family: inherit;
+  min-height: 48px;
 }
 .insurance-toggle button.active {
-  border-color: var(--navy);
-  background: var(--navy);
+  border-color: var(--orange);
+  background: var(--orange);
   color: var(--white);
 }
 .insurance-toggle button:hover:not(.active) {
@@ -195,8 +198,8 @@ select, input[type="number"] {
 }
 select:focus, input[type="number"]:focus {
   outline: none;
-  border-color: var(--navy);
-  box-shadow: 0 0 0 3px rgba(25,40,100,.1);
+  border-color: var(--orange);
+  box-shadow: 0 0 0 3px rgba(254,142,63,.15);
 }
 
 /* ===== Checkbox ===== */
@@ -221,8 +224,8 @@ select:focus, input[type="number"]:focus {
   background: var(--g50);
 }
 .checkbox-item.checked {
-  border-color: var(--navy);
-  background: rgba(25,40,100,.04);
+  border-color: var(--orange);
+  background: var(--orange-bg);
 }
 .checkbox-item input[type="checkbox"] { display: none; }
 .checkbox-item .check-box {
@@ -237,8 +240,8 @@ select:focus, input[type="number"]:focus {
   transition: all .15s;
 }
 .checkbox-item.checked .check-box {
-  background: var(--navy);
-  border-color: var(--navy);
+  background: var(--orange);
+  border-color: var(--orange);
 }
 .checkbox-item.checked .check-box::after {
   content: '';
@@ -303,7 +306,7 @@ select:focus, input[type="number"]:focus {
   right: -40px;
   width: 120px;
   height: 120px;
-  background: rgba(242,154,73,.15);
+  background: rgba(254,142,63,.15);
   border-radius: 50%;
 }
 .result-card::after {
@@ -313,7 +316,7 @@ select:focus, input[type="number"]:focus {
   left: -20px;
   width: 80px;
   height: 80px;
-  background: rgba(255,198,51,.1);
+  background: rgba(254,142,63,.08);
   border-radius: 50%;
 }
 .result-content { position: relative; z-index: 1; }
@@ -324,10 +327,12 @@ select:focus, input[type="number"]:focus {
   margin-bottom: 4px;
 }
 .result-card .result-amount {
+  font-family: "Poppins", sans-serif;
   font-size: 28px;
-  font-weight: 800;
+  font-weight: 600;
   letter-spacing: -0.5px;
   line-height: 1.2;
+  font-feature-settings: "kern" 1;
 }
 .result-card .result-amount .yen {
   font-size: 16px;
@@ -375,7 +380,7 @@ select:focus, input[type="number"]:focus {
   border: 2px solid var(--orange);
   border-radius: var(--radius-lg);
   padding: 20px;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
 }
 .monthly-card .monthly-title {
   font-size: 14px;
@@ -414,20 +419,22 @@ select:focus, input[type="number"]:focus {
 }
 .monthly-row.highlight .value {
   color: var(--orange);
+  font-family: "Poppins", sans-serif;
   font-size: 20px;
-  font-weight: 800;
+  font-weight: 600;
+  font-feature-settings: "kern" 1;
 }
 
 /* ===== Note ===== */
 .note {
-  background: rgba(255,198,51,.08);
-  border-left: 3px solid var(--gold);
+  background: var(--g50);
+  border-left: 3px solid var(--navy);
   border-radius: 0 var(--radius-md) var(--radius-md) 0;
   padding: 14px 16px;
   font-size: 12px;
   color: var(--g700);
   line-height: 1.8;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
 }
 .note strong {
   display: block;
@@ -485,10 +492,14 @@ select:focus, input[type="number"]:focus {
 .hidden { display: none !important; }
 
 /* ===== Responsive ===== */
+@media (min-width: 768px) {
+  .container { padding: 24px 40px; }
+}
 @media (max-width: 400px) {
   .two-col { grid-template-columns: 1fr; }
-  .result-card .result-amount { font-size: 32px; }
-  .header-text h1 { font-size: 15px; }
+  .result-card .result-amount { font-size: 24px; }
+  .header-text h1 { font-size: 14px; }
+  .card-title { font-size: 14px; }
 }
 </style>
 </head>
@@ -706,13 +717,13 @@ select:focus, input[type="number"]:focus {
     ・介護保険の金額は地域単価10.00円（その他地域）で計算しています。地域により異なります。
   </div>
 
-  <div style="text-align:center; margin-bottom:20px;">
-    <a href="https://footage-nursing.jp/" target="_blank" rel="noopener" style="display:inline-block; width:100%; max-width:400px; padding:16px 24px; background:var(--orange); color:var(--white); font-size:16px; font-weight:700; text-decoration:none; border-radius:var(--radius-md); box-shadow:0 2px 8px rgba(242,154,73,.3); transition:background .2s;" onmouseover="this.style.background='#e08a3a'" onmouseout="this.style.background='var(--orange)'">フッテージに相談する</a>
+  <div style="text-align:center; margin-bottom:24px;">
+    <a href="https://footage-nursing.jp/" target="_blank" rel="noopener" style="display:inline-block; width:100%; max-width:400px; padding:15px 24px; background:var(--orange); color:var(--white); font-size:14px; font-weight:600; text-decoration:none; border-radius:5px; box-shadow:0 2px 8px rgba(254,142,63,.3); transition:background .2s; min-height:48px; line-height:1.5;" onmouseover="this.style.background='#e5812f'" onmouseout="this.style.background='var(--orange)'">フッテージに相談する</a>
   </div>
 
   <div class="footer">
     <span class="logo-text">FOOTAGE</span><br>
-    訪問看護 月額料金概算ツール v2.0<br>
+    訪問看護 月額料金概算ツール v2.1<br>
     令和6年度 介護報酬・診療報酬改定対応
   </div>
 </div>
