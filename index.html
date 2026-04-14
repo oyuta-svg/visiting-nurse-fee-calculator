@@ -739,6 +739,9 @@ const KAIGO_KANGO = { '20': 314, '30': 471, '60': 823, '90': 1128 };
 const KAIGO_REHAB_PER = 293;
 // 医療保険：訪問看護基本療養費（看護・リハビリ共通）
 const IRYO_BASE = 5550;
+// 医療保険：訪問看護管理療養費
+const IRYO_KANRI_FIRST = 7440;  // 月初日
+const IRYO_KANRI_AFTER = 3000;  // 2日目以降（1日につき）
 
 // State
 let currentInsurance = 'kaigo';
@@ -883,6 +886,10 @@ function calculate() {
     const kangoMonthly = kangoBase * kangoPerMonth;
     const rehabMonthly = rehabBase * rehabPerMonth;
 
+    // 訪問看護管理療養費（訪問日数に応じて自動算定）
+    const totalVisitDays = kangoPerMonth + rehabPerMonth;
+    const kanriFee = totalVisitDays > 0 ? IRYO_KANRI_FIRST + (totalVisitDays - 1) * IRYO_KANRI_AFTER : 0;
+
     // 月額加算
     let addFee = 0;
     const addItems = [];
@@ -896,7 +903,7 @@ function calculate() {
       addFee += 2500; addItems.push({ n: '特別管理加算(II)', f: 2500 });
     }
 
-    const totalFee = kangoMonthly + rehabMonthly + addFee;
+    const totalFee = kangoMonthly + rehabMonthly + kanriFee + addFee;
     const burden = totalFee * ratio;
     const burdenMax = rangeMax(burden);
 
@@ -908,6 +915,9 @@ function calculate() {
     if (rehabBase > 0 && rehabPerWeek > 0) {
       breakdownHTML += `<div class="breakdown-row"><span class="label">リハビリ 基本療養費</span><span class="value">${fmt(rehabBase)}円/回</span></div>`;
     }
+    if (kanriFee > 0) {
+      breakdownHTML += `<div class="breakdown-row"><span class="label">管理療養費</span><span class="value">${fmt(kanriFee)}円/月</span></div>`;
+    }
     breakdownHTML += `<div class="breakdown-row total"><span class="label">月額合計(10割)</span><span class="value">${fmt(totalFee)}円</span></div>`;
 
     // Monthly
@@ -917,6 +927,9 @@ function calculate() {
     }
     if (rehabBase > 0 && rehabPerWeek > 0) {
       monthlyHTML += `<div class="monthly-row"><span class="label">リハビリ(${fmt(rehabBase)}円 x 週${rehabPerWeek}回 x 4週)</span><span class="value">${fmt(rehabMonthly)}円</span></div>`;
+    }
+    if (kanriFee > 0) {
+      monthlyHTML += `<div class="monthly-row"><span class="label">管理療養費(初日${fmt(IRYO_KANRI_FIRST)}円 + ${totalVisitDays - 1}日 x ${fmt(IRYO_KANRI_AFTER)}円)</span><span class="value">${fmt(kanriFee)}円</span></div>`;
     }
     addItems.forEach(i => {
       monthlyHTML += `<div class="monthly-row"><span class="label">${i.n}</span><span class="value">${fmt(i.f)}円</span></div>`;
