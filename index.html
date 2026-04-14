@@ -910,10 +910,10 @@ function calculate() {
     // Breakdown
     breakdownHTML = '';
     if (kangoBase > 0 && kangoPerWeek > 0) {
-      breakdownHTML += `<div class="breakdown-row"><span class="label">看護 基本療養費</span><span class="value">${fmt(kangoBase)}円/回</span></div>`;
+      breakdownHTML += `<div class="breakdown-row"><span class="label">看護 基本療養費</span><span class="value">${fmt(kangoMonthly)}円/月</span></div>`;
     }
     if (rehabBase > 0 && rehabPerWeek > 0) {
-      breakdownHTML += `<div class="breakdown-row"><span class="label">リハビリ 基本療養費</span><span class="value">${fmt(rehabBase)}円/回</span></div>`;
+      breakdownHTML += `<div class="breakdown-row"><span class="label">リハビリ 基本療養費</span><span class="value">${fmt(rehabMonthly)}円/月</span></div>`;
     }
     if (kanriFee > 0) {
       breakdownHTML += `<div class="breakdown-row"><span class="label">管理療養費</span><span class="value">${fmt(kanriFee)}円/月</span></div>`;
